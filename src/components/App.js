@@ -9,8 +9,20 @@ class App extends React.Component {
     super();
 
     this.state = {
-      myName: "red1hr"
+      Appointments: []
     };
+  }
+
+  componentDidMount() {
+    fetch("./data.json")
+      .then(data => data.json())
+      .then(results => {
+        const apts = results.map(item => item);
+
+        this.setState({
+          Appointments: apts
+        });
+      });
   }
 
   render() {
