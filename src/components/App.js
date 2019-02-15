@@ -15,6 +15,7 @@ class App extends React.Component {
       latestIndex: 0,
       orderBy: "petName",
       orderDir: "asc",
+      queryText: "",
       displayForm: false
     };
   }
@@ -67,6 +68,12 @@ class App extends React.Component {
     });
   };
 
+  searchApts = query => {
+    this.setState({
+      queryText: query
+    });
+  };
+
   render() {
     let order;
     let filtredApts = this.state.Appointments;
@@ -76,16 +83,30 @@ class App extends React.Component {
       order = -1;
     }
 
-    filtredApts.sort((a, b) => {
-      if (
-        a[this.state.orderBy].toLowerCase() <
-        b[this.state.orderBy].toLowerCase()
-      ) {
-        return -1 * order;
-      } else {
-        return 1 * order;
-      }
-    });
+    filtredApts = filtredApts
+      .sort((a, b) => {
+        if (
+          a[this.state.orderBy].toLowerCase() <
+          b[this.state.orderBy].toLowerCase()
+        ) {
+          return -1 * order;
+        } else {
+          return 1 * order;
+        }
+      })
+      .filter(eachItem => {
+        return (
+          eachItem["petName"]
+            .toLowerCase()
+            .includes(this.state.queryText.toLowerCase()) ||
+          eachItem["ownerName"]
+            .toLowerCase()
+            .includes(this.state.queryText.toLowerCase()) ||
+          eachItem["aptNotes"]
+            .toLowerCase()
+            .includes(this.state.queryText.toLowerCase())
+        );
+      });
 
     return (
       <main className="page bg-white" id="petratings">
@@ -103,6 +124,7 @@ class App extends React.Component {
                   orderBy={this.state.orderBy}
                   orderDir={this.state.orderDir}
                   changeOrder={this.changeOrder}
+                  searchApts={this.searchApts}
                 />
                 <ListAppointments
                   deleteAppointments={this.handleDelete}
