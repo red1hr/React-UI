@@ -1,5 +1,7 @@
 import React from "react";
 
+import { without } from "lodash";
+
 import AddAppointments from "./AddAppointments";
 import SearchAppointments from "./SearchAppointments";
 import ListAppointments from "./ListAppointments";
@@ -10,7 +12,8 @@ class App extends React.Component {
 
     this.state = {
       Appointments: [],
-      latestIndex: 0
+      latestIndex: 0,
+      displayForm: false
     };
   }
 
@@ -30,6 +33,19 @@ class App extends React.Component {
       });
   }
 
+  handleDelete = apt => {
+    let tempApts = this.state.Appointments;
+    tempApts = without(tempApts, apt);
+
+    this.setState({
+      Appointments: tempApts
+    });
+  };
+
+  showForm = () => {
+    this.setState(prevState => ({ displayForm: !prevState.displayForm }));
+  };
+
   render() {
     return (
       <main className="page bg-white" id="petratings">
@@ -38,9 +54,15 @@ class App extends React.Component {
             <div className="col-md-12 bg-white">
               <div className="container">
                 <div>{this.state.myName}</div>
-                <AddAppointments />
+                <AddAppointments
+                  showForm={this.showForm}
+                  displayForm={this.state.displayForm}
+                />
                 <SearchAppointments />
-                <ListAppointments appointments={this.state.Appointments} />
+                <ListAppointments
+                  deleteAppointments={this.handleDelete}
+                  appointments={this.state.Appointments}
+                />
               </div>
             </div>
           </div>
