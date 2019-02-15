@@ -42,8 +42,20 @@ class App extends React.Component {
     });
   };
 
-  showForm = () => {
+  toggleForm = () => {
     this.setState(prevState => ({ displayForm: !prevState.displayForm }));
+  };
+
+  handleAdd = apt => {
+    const tempApts = this.state.Appointments;
+    apt.aptId = this.state.latestIndex;
+
+    tempApts.unshift(apt);
+
+    this.setState({
+      Appointments: tempApts,
+      latestIndex: this.state.latestIndex + 1
+    });
   };
 
   render() {
@@ -55,8 +67,9 @@ class App extends React.Component {
               <div className="container">
                 <div>{this.state.myName}</div>
                 <AddAppointments
-                  showForm={this.showForm}
+                  toggleForm={this.toggleForm}
                   displayForm={this.state.displayForm}
+                  AddAppointment={this.handleAdd}
                 />
                 <SearchAppointments />
                 <ListAppointments
