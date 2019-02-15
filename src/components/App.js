@@ -35,7 +35,7 @@ class App extends React.Component {
                 <div>{this.state.myName}</div>
                 <AddAppointments />
                 <SearchAppointments />
-                <ListAppointments />
+                <ListAppointments appointments={this.state.Appointments} />
               </div>
             </div>
           </div>
