@@ -13,6 +13,8 @@ class App extends React.Component {
     this.state = {
       Appointments: [],
       latestIndex: 0,
+      orderBy: "petName",
+      orderDir: "asc",
       displayForm: false
     };
   }
@@ -58,7 +60,33 @@ class App extends React.Component {
     });
   };
 
+  changeOrder = (order, dir) => {
+    this.setState({
+      orderBy: order,
+      orderDir: dir
+    });
+  };
+
   render() {
+    let order;
+    let filtredApts = this.state.Appointments;
+    if (this.state.orderDir === "asc") {
+      order = 1;
+    } else {
+      order = -1;
+    }
+
+    filtredApts.sort((a, b) => {
+      if (
+        a[this.state.orderBy].toLowerCase() <
+        b[this.state.orderBy].toLowerCase()
+      ) {
+        return -1 * order;
+      } else {
+        return 1 * order;
+      }
+    });
+
     return (
       <main className="page bg-white" id="petratings">
         <div className="container">
@@ -71,10 +99,14 @@ class App extends React.Component {
                   displayForm={this.state.displayForm}
                   AddAppointment={this.handleAdd}
                 />
-                <SearchAppointments />
+                <SearchAppointments
+                  orderBy={this.state.orderBy}
+                  orderDir={this.state.orderDir}
+                  changeOrder={this.changeOrder}
+                />
                 <ListAppointments
                   deleteAppointments={this.handleDelete}
-                  appointments={this.state.Appointments}
+                  appointments={filtredApts}
                 />
               </div>
             </div>
